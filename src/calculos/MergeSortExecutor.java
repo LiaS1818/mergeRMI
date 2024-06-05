@@ -1,34 +1,33 @@
 package calculos;
 
-import java.util.concurrent.RecursiveTask;
+import java.util.concurrent.Callable;
 import java.util.Arrays;
 
-public class MergeSortTask extends RecursiveTask<int[]> {
+public class MergeSortExecutor implements Callable<int[]> {
     private final int[] array;
     private final int start;
     private final int end;
     private static final int THRESHOLD = 1000; // Umbral para cambiar a secuencial
 
-    public MergeSortTask(int[] array, int start, int end) {
+
+    public MergeSortExecutor(int[] array, int start, int end) {
         this.array = array;
         this.start = start;
         this.end = end;
     }
 
     @Override
-    protected int[] compute() {
+    public int[] call() throws Exception {
         if (end - start <= THRESHOLD) {
             return sequentialSort(Arrays.copyOfRange(array, start, end));
         } else {
             int mid = (start + end) / 2;
 
-            MergeSortTask leftTask = new MergeSortTask(array, start, mid);
-            MergeSortTask rightTask = new MergeSortTask(array, mid, end);
+            MergeSortExecutor leftTask = new MergeSortExecutor(array, start, mid);
+            MergeSortExecutor rightTask = new MergeSortExecutor(array, mid, end);
 
-            invokeAll(leftTask, rightTask);
-
-            int[] leftResult = leftTask.join();
-            int[] rightResult = rightTask.join();
+            int[] leftResult = leftTask.call();
+            int[] rightResult = rightTask.call();
 
             return merge(leftResult, rightResult);
         }
