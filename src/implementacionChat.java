@@ -13,7 +13,7 @@ import java.util.concurrent.Future;
 
 public class implementacionChat extends UnicastRemoteObject implements chatServidor {
     private ArrayList<chatCliente> clientes;
-    private ArrayList<int[]> resultadosClientes;
+    public ArrayList<int[]> resultadosClientes;
     protected implementacionChat() throws RemoteException {
         clientes = new ArrayList<>();
         resultadosClientes = new ArrayList<>();
@@ -87,7 +87,17 @@ public class implementacionChat extends UnicastRemoteObject implements chatServi
         // Enviar el resultado a todos los clientes
         String resultado = sb.toString();
         mensaje(nombre + " el servidor te entrega tu resultado: " + resultado);
-        resultadosClientes.add(arregloAux);
+        // Agregar el resultado a la lista si no está ya presente
+        boolean exists = false;
+        for (int[] existingArray : resultadosClientes) {
+            if (Arrays.equals(existingArray, arregloAux)) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            resultadosClientes.add(arregloAux);
+        }
         return resultado;
     }
 
@@ -98,8 +108,10 @@ public class implementacionChat extends UnicastRemoteObject implements chatServi
             sb.append(num).append(" ");
         }
         String arregloCliente = sb.toString();
+
         System.out.println("Arreglo Creado por:" + nombre + ": " + arregloCliente);
         return arregloCliente;
+
     }
 
     @Override
@@ -108,6 +120,12 @@ public class implementacionChat extends UnicastRemoteObject implements chatServi
         return Arrays.stream(todosLosArreglos.toArray(new int[0][]))
                 .flatMapToInt(Arrays::stream)
                 .toArray();
+
+
+    }
+
+    public ArrayList<int[]> getResultados(){
+        return this.resultadosClientes;
     }
 
 
