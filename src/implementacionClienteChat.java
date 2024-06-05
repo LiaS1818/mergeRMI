@@ -1,5 +1,6 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Arrays;
 
 public class implementacionClienteChat extends UnicastRemoteObject implements chatCliente, Runnable {
     private chatServidor servidor;
@@ -40,6 +41,10 @@ public class implementacionClienteChat extends UnicastRemoteObject implements ch
                 String resultado =  servidor.procesarSolicitud(arregloAux, opcion, nombre);
                 menu.mostrarArregloOrdenado(resultado);
                 servidor.mostrarArregloOrginal(arregloAux, nombre);
+                menu.setTiempo(resultado);
+                String arregloCombinado = Arrays.toString(servidor.combinarResultadosClientes());
+                arreglo = servidor.combinarResultadosClientes();
+                resultado = servidor.procesarSolicitud(arreglo, opcion, nombre);
                 menu.setTiempo(resultado);
 
                 // Limpiar la opción en la interfaz gráfica para permitir enviar nuevas solicitudes

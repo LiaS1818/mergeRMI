@@ -13,9 +13,10 @@ import java.util.concurrent.Future;
 
 public class implementacionChat extends UnicastRemoteObject implements chatServidor {
     private ArrayList<chatCliente> clientes;
-
+    private ArrayList<int[]> resultadosClientes;
     protected implementacionChat() throws RemoteException {
         clientes = new ArrayList<>();
+        resultadosClientes = new ArrayList<>();
     }
 
     @Override
@@ -86,6 +87,7 @@ public class implementacionChat extends UnicastRemoteObject implements chatServi
         // Enviar el resultado a todos los clientes
         String resultado = sb.toString();
         mensaje(nombre + " el servidor te entrega tu resultado: " + resultado);
+        resultadosClientes.add(arregloAux);
         return resultado;
     }
 
@@ -98,6 +100,14 @@ public class implementacionChat extends UnicastRemoteObject implements chatServi
         String arregloCliente = sb.toString();
         System.out.println("Arreglo Creado por:" + nombre + ": " + arregloCliente);
         return arregloCliente;
+    }
+
+    @Override
+    public int[] combinarResultadosClientes() throws RemoteException {
+        ArrayList<int[]> todosLosArreglos = new ArrayList<>(resultadosClientes);
+        return Arrays.stream(todosLosArreglos.toArray(new int[0][]))
+                .flatMapToInt(Arrays::stream)
+                .toArray();
     }
 
 
