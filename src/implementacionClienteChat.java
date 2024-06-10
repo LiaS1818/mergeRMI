@@ -27,27 +27,18 @@ public class implementacionClienteChat extends UnicastRemoteObject implements ch
     public void run() {
         while (true) {
             try {
-                // Esperar a que el usuario presione el botón para enviar la solicitud
                 while (menu.getOpcion() == 0) {
                     Thread.sleep(100);
                 }
 
-                // Obtener el tamaño del arreglo, la opción y el arreglo desde la interfaz gráfica
-                int[] arregloAux = menu.getArreglo();
-                int opcion = menu.getOpcion();
+                this.arreglo = menu.getArreglo();
+                this.opcion = menu.getOpcion();
 
-                // Procesar la solicitud y mostrar el resultado
-
-                String resultado =  servidor.procesarSolicitud(arregloAux, opcion, nombre);
+                String resultado = servidor.procesarSolicitud(arreglo, opcion, nombre);
                 menu.mostrarArregloOrdenado(resultado);
-                servidor.mostrarArregloOrginal(arregloAux, nombre);
-                menu.setTiempo(resultado);
-                String arregloCombinado = Arrays.toString(servidor.combinarResultadosClientes());
-                arreglo = servidor.combinarResultadosClientes();
-                resultado = servidor.procesarSolicitud(arreglo, opcion, nombre);
+                servidor.mostrarArregloOrginal(arreglo, nombre);
                 menu.setTiempo(resultado);
 
-                // Limpiar la opción en la interfaz gráfica para permitir enviar nuevas solicitudes
                 menu.setOpcion(0);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);

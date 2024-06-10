@@ -127,10 +127,6 @@ public class Menu extends JFrame implements ActionListener {
         arregloAux = arreglo.clone();
     }
 
-    public void mostrarResultado(String resultado) {
-        txtArregloOrdenado.setText(resultado);
-    }
-
     public void mostrarArregloOriginal() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < arreglo.length; i++) {
@@ -169,6 +165,14 @@ public class Menu extends JFrame implements ActionListener {
             opcion = 2;
         } else if (e.getSource() == btnExceSer) {
             opcion = 3;
+        }else if (e.getSource() == btnLimpiar){
+            txtArregloOrdenado.setText("");
+            try {
+                implementacionChat implementacionChat = new implementacionChat();
+                implementacionChat.limpiarArregloDeArreglos();
+            } catch (RemoteException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
